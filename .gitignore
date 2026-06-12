@@ -1,0 +1,15 @@
+# Environnement Python
+.venv/
+__pycache__/
+*.pyc
+
+# IDE
+.idea/
+
+# === SECRETS — NE JAMAIS COMMITTER ===
+.env
+
+# État & sorties générés en local (mode dev)
+state/
+digests/
+last_digest.md
