@@ -9,6 +9,9 @@ __pycache__/
 # === SECRETS — NE JAMAIS COMMITTER ===
 .env
 
+# Réglages Claude Code locaux (machine-spécifiques)
+.claude/settings.local.json
+
 # État & sorties générés en local (mode dev)
 state/
 digests/
