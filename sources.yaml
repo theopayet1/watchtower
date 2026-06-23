@@ -1,23 +1,22 @@
-# Configuration de la veille.
-# Réglages globaux puis une entrée par catégorie. Tous les champs de source
-# sont optionnels : si tu n'en mets pas, le collecteur correspondant est sauté.
+# Watch configuration.
+# Global settings first, then one entry per category. All source fields are
+# optional: omit one and its collector is skipped.
 
-max_per_source: 15        # nb max d'items récupérés par source et par catégorie
-freshness_hours: 30       # on ignore ce qui est plus vieux que ça (RSS/NewsAPI/HN)
+max_per_source: 15        # max items fetched per source, per category
+freshness_hours: 30       # ignore anything older than this (RSS / Hacker News)
 
 categories:
 
   ia:
-    label: "🤖 Intelligence Artificielle"
-    rss:                    # sources FRANÇAISES — aucune clé requise
-      - https://www.actuia.com/feed/
-      - https://www.lebigdata.fr/feed
-    # hn_query: "AI OR LLM OR GPT"   # Hacker News = contenu ANGLAIS, décommente si tu le veux
+    label: "🤖 Artificial Intelligence"
+    rss:                    # RSS feeds — no key required
+      - https://huggingface.co/blog/feed.xml
+      - https://www.technologyreview.com/feed/
+    hn_query: "AI OR LLM OR GPT"   # Hacker News full-text search (Algolia)
 
   dev:
-    label: "💻 Développement & Tech"
+    label: "💻 Development & Tech"
     rss:
-      - https://www.numerama.com/feed/
-      - https://next.ink/feed/
-      - https://www.lemondeinformatique.fr/flux-rss/thematique/toutes-les-actualites/rss.xml
-    # hn_query: "python OR rust OR javascript"   # contenu ANGLAIS
+      - https://techcrunch.com/feed/
+      - https://www.theverge.com/rss/index.xml
+    hn_query: "python OR rust OR javascript OR framework"

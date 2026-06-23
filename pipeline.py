@@ -99,9 +99,9 @@ def main() -> None:
         print("\nAucune nouveauté aujourd'hui, pas d'email envoyé.")
         return
 
-    digest = f"# Veille du {date.today().isoformat()}\n\n" + "\n\n".join(digest_parts)
+    digest = f"# News digest — {date.today().isoformat()}\n\n" + "\n\n".join(digest_parts)
 
-    deliver_email.send(f"Veille — {date.today().isoformat()}", digest)
+    deliver_email.send(f"🗞️ News digest — {date.today().isoformat()}", digest)
     state.save_digest(digest)
     state.mark_seen(all_new)                    # on ne marque qu'APRÈS livraison
     if feedback:

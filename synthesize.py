@@ -5,14 +5,14 @@ une liste markdown brute — comme ça le pipeline reste testable de bout en bou
 """
 import config
 
-PROMPT = """Tu es un assistant de veille. Voici les nouveautés du jour pour la
-catégorie « {label} ». Rédige une synthèse en français, claire et concise :
-- regroupe les sujets proches, ne fais pas une simple liste à puces ligne par ligne
-- 3 à 6 points maximum, le plus important d'abord
-- pour chaque point, garde le ou les liens source au format markdown [texte](url)
-- ton factuel, zéro remplissage
+PROMPT = """You are a news-watch assistant. Below are today's items for the
+category "{label}". Write a clear, concise synthesis IN ENGLISH:
+- group related topics together; do not produce a flat line-by-line bullet list
+- 3 to 6 points maximum, most important first
+- for each point, keep the source link(s) as markdown [text](url)
+- factual tone, no filler
 {feedback_block}
-Voici les items (titre — source — lien — éventuel résumé) :
+Items (title — source — link — optional summary):
 
 {items_block}
 """
@@ -41,7 +41,7 @@ def synthesize(label: str, items: list[dict], feedback: str = "") -> str:
         return _fallback(items)
 
     feedback_block = (
-        f"\nConsigne supplémentaire de l'utilisateur (à appliquer) : {feedback}\n"
+        f"\nAdditional user instruction (apply it): {feedback}\n"
         if feedback else ""
     )
     prompt = PROMPT.format(label=label, feedback_block=feedback_block, items_block=items_block)
