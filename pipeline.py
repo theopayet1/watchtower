@@ -95,17 +95,21 @@ def main() -> None:
             digest_parts.append(f"## {label}\n\n{summary}")
             all_new += fresh
 
-    if not digest_parts:
-        print("\nAucune nouveauté aujourd'hui, pas d'email envoyé.")
-        return
+    today = date.today().isoformat()
+    if digest_parts:
+        body = f"# News digest — {today}\n\n" + "\n\n".join(digest_parts)
+    else:
+        body = f"# News digest — {today}\n\n_No new items today._"
 
-    digest = f"# News digest — {date.today().isoformat()}\n\n" + "\n\n".join(digest_parts)
+    # On envoie TOUJOURS, même sans nouveauté (confirme que la veille a tourné).
+    deliver_email.send(f"🗞️ News digest — {today}", body)
 
-    deliver_email.send(f"🗞️ News digest — {date.today().isoformat()}", digest)
-    state.save_digest(digest)
-    state.mark_seen(all_new)                    # on ne marque qu'APRÈS livraison
-    if feedback:
-        state.mark_feedback_applied()
+    # On n'archive et ne marque "vu" que s'il y avait vraiment du contenu.
+    if digest_parts:
+        state.save_digest(body)
+        state.mark_seen(all_new)                # marqué APRÈS livraison réussie
+        if feedback:
+            state.mark_feedback_applied()
     print(f"\nDigest livré ({len(all_new)} items) et état mis à jour.")
 
 
