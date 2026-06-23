@@ -30,7 +30,10 @@ IS_PROD = APP_ENV == "prod"
 
 
 # --- Anthropic (étape 6) ---
-ANTHROPIC_API_KEY = _env("ANTHROPIC_API_KEY")
+# En cloud (Claude Code web), le nom ANTHROPIC_API_KEY est RÉSERVÉ par la plateforme
+# et n'est pas transmis à nos scripts. On lit donc d'abord un nom personnalisé,
+# avec repli sur ANTHROPIC_API_KEY pour le dev local.
+ANTHROPIC_API_KEY = _env("VEILLE_ANTHROPIC_API_KEY") or _env("ANTHROPIC_API_KEY")
 ANTHROPIC_MODEL = _env("ANTHROPIC_MODEL", "claude-opus-4-8")
 
 # --- Supabase (étape 5) ---
