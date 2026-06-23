@@ -20,10 +20,15 @@ In the environment settings:
   ```
   VEILLE_ANTHROPIC_API_KEY=sk-ant-...
   BREVO_API_KEY=xkeysib-...
+  EMAIL_FROM=you@verified-sender.com
+  EMAIL_TO=you@example.com
   SUPABASE_URL=https://xxxx.supabase.co
   SUPABASE_KEY=sb_secret_...
   APP_ENV=prod
   ```
+  `EMAIL_FROM` must be a sender you verified with Brevo; `EMAIL_TO` is the
+  recipient. Without them the `prod` preflight fails ("EMAIL_TO missing") and Brevo
+  rejects a send with no sender.
 - **Setup script:**
   ```
   pip install -r requirements.txt
