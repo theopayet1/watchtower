@@ -129,6 +129,43 @@ def mark_feedback_applied() -> None:
     FEEDBACK_FILE.write_text("", encoding="utf-8")
 
 
+# ------------------------------------------------------------------- sources (BDD)
+
+def load_sources() -> dict:
+    """Charge la config des sources.
+
+    - Mode Supabase : lit la table `sources` (catégories + flux RSS + requêtes HN),
+      ce qui permet d'ajouter/éditer des flux sans toucher au code ni redéployer.
+    - Repli sur sources.yaml si : pas de Supabase, table absente/vide, ou erreur.
+
+    Renvoie le même format que config.load_sources()."""
+    if not USE_SUPABASE:
+        return config.load_sources()
+    try:
+        rows = _sb.table("sources").select("*").eq("enabled", True).execute().data
+    except Exception as e:
+        print(f"  [sources] lecture table impossible ({e}) -> repli sources.yaml")
+        return config.load_sources()
+    if not rows:
+        print("  [sources] table 'sources' vide -> repli sources.yaml")
+        return config.load_sources()
+
+    categories: dict = {}
+    for r in rows:
+        cat = categories.setdefault(r["category"], {"label": r.get("label") or r["category"]})
+        if r.get("label"):
+            cat["label"] = r["label"]
+        if r["type"] == "rss":
+            cat.setdefault("rss", []).append(r["value"])
+        elif r["type"] == "hn":
+            cat["hn_query"] = r["value"]
+    return {
+        "max_per_source": config.MAX_PER_SOURCE,
+        "freshness_hours": config.FRESHNESS_HOURS,
+        "categories": categories,
+    }
+
+
 # ----------------------------------------------------------------- backend local
 
 def _load_seen() -> dict:

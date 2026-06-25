@@ -39,3 +39,27 @@ create table if not exists feedback (
 
 -- Index to quickly find feedback not yet applied.
 create index if not exists feedback_not_applied_idx on feedback (applied) where applied = false;
+
+-- 4) sources : your categories and feeds, editable without touching the code.
+--    One row = one RSS feed OR one Hacker News query, attached to a category.
+--    Read by state.load_sources() in Supabase mode (sources.yaml is the fallback).
+create table if not exists sources (
+    id         bigint generated always as identity primary key,
+    category   text not null,                          -- e.g. "ia", "dev"
+    label      text not null,                          -- e.g. "🤖 Artificial Intelligence"
+    type       text not null check (type in ('rss','hn')),
+    value      text not null,                          -- RSS url, or HN search query
+    enabled    boolean not null default true,
+    created_at timestamptz not null default now(),
+    unique (category, type, value)
+);
+
+-- Initial seed (idempotent) — the default sources:
+insert into sources (category, label, type, value) values
+  ('ia',  '🤖 Artificial Intelligence', 'rss', 'https://huggingface.co/blog/feed.xml'),
+  ('ia',  '🤖 Artificial Intelligence', 'rss', 'https://www.technologyreview.com/feed/'),
+  ('ia',  '🤖 Artificial Intelligence', 'hn',  'AI OR LLM OR GPT'),
+  ('dev', '💻 Development & Tech', 'rss', 'https://techcrunch.com/feed/'),
+  ('dev', '💻 Development & Tech', 'rss', 'https://www.theverge.com/rss/index.xml'),
+  ('dev', '💻 Development & Tech', 'hn',  'python OR rust OR javascript OR framework')
+on conflict (category, type, value) do nothing;

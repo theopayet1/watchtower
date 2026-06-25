@@ -18,6 +18,7 @@ except Exception:
     pass
 
 import config
+import state
 from collect import rss, hackernews
 
 LINE = "═" * 72
@@ -47,7 +48,7 @@ def print_item(n: int, it: dict) -> None:
 
 def main() -> None:
     wanted = sys.argv[1] if len(sys.argv) > 1 else None
-    sources = config.load_sources()
+    sources = state.load_sources()   # table Supabase si dispo, sinon sources.yaml
     max_per_source = sources.get("max_per_source", 15)
     freshness_hours = sources.get("freshness_hours", 30)
 

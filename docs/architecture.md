@@ -119,6 +119,15 @@ The pipeline prints which backend is active at startup
 ### Supabase tables (`schema.sql`)
 
 ```
+┌─ sources ─────────────────┐   YOUR feeds & queries (edit without touching code)
+│  id        bigint (PK)    │   one row per RSS feed or HN query
+│  category  text           │   e.g. "ia", "dev"
+│  label     text           │   category display name
+│  type      text           │   "rss" | "hn"
+│  value     text           │   RSS url, or HN search query
+│  enabled   boolean        │
+└───────────────────────────┘   read in Supabase mode; falls back to sources.yaml
+
 ┌─ seen_items ──────────────┐   deduplication memory + later lookup
 │  id        text  (PK)     │   one row per article ever processed
 │  seen_at   timestamptz    │

@@ -1,9 +1,14 @@
 # Configuration
 
-## `sources.yaml`
+## Sources — `sources.yaml` (local) or the `sources` table (Supabase)
 
 Your editable config: global settings, then one entry per category. All source
 fields are optional — omit one and its collector is skipped.
+
+In **Supabase mode**, the watch reads its sources from the `sources` **table** in
+the database, so you can add/edit feeds without touching code or redeploying;
+`sources.yaml` then acts as the local/dev fallback. The two describe the same
+thing in two shapes.
 
 ```yaml
 max_per_source: 15        # max items fetched per source, per category
@@ -32,6 +37,23 @@ categories:
   `freshness_hours` are returned.
 
 Add a source = add a URL. Preview before committing: `python preview.py ia`.
+
+### The `sources` table (Supabase mode)
+
+Each row is one feed or query attached to a category:
+
+| Column | Meaning |
+|--------|---------|
+| `category` | category key, e.g. `ia`, `dev` |
+| `label` | category display name (the digest section header) |
+| `type` | `rss` or `hn` |
+| `value` | the RSS URL, or the Hacker News query |
+| `enabled` | set `false` to pause a source without deleting it |
+
+Add a source = insert a row (e.g. `type='rss'`, `value='https://…/feed'`). The
+globals `max_per_source` / `freshness_hours` come from the `MAX_PER_SOURCE` /
+`FRESHNESS_HOURS` env vars in this mode (defaults 15 / 30). Create the table from
+`schema.sql`; if it's missing or empty, the watch falls back to `sources.yaml`.
 
 ---
 

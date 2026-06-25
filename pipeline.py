@@ -69,7 +69,7 @@ def preflight() -> None:
 
 def main() -> None:
     preflight()
-    sources = config.load_sources()
+    sources = state.load_sources()   # table Supabase si dispo, sinon sources.yaml
     max_per_source = sources.get("max_per_source", 15)
     freshness_hours = sources.get("freshness_hours", 30)
     print(f"État : {'Supabase' if state.USE_SUPABASE else 'local JSON'}")

@@ -54,6 +54,10 @@ SMTP_PASSWORD = _env("SMTP_PASSWORD")
 EMAIL_FROM = _env("EMAIL_FROM")
 EMAIL_TO = _env("EMAIL_TO")
 
+# --- Réglages globaux des sources (utilisés quand les sources viennent de la BDD) ---
+MAX_PER_SOURCE = int(_env("MAX_PER_SOURCE", "15") or 15)
+FRESHNESS_HOURS = int(_env("FRESHNESS_HOURS", "30") or 30)
+
 
 def load_sources(path: str | Path | None = None) -> dict:
     """Lit sources.yaml et renvoie la config (catégories, limites, fraîcheur)."""
