@@ -98,6 +98,14 @@ def main() -> None:
     today = date.today().isoformat()
     if digest_parts:
         body = f"# News digest — {today}\n\n" + "\n\n".join(digest_parts)
+        # Index des items avec leur id, pour les retrouver ensuite dans la table seen_items.
+        index = "\n".join(
+            f"- {it['title']}\n  id:  {it['id']}\n  url: {it['url']}" for it in all_new
+        )
+        body += (
+            "\n\n---\n\nITEMS INDEX (search these ids / titles in the seen_items "
+            f"table to find an item later):\n\n{index}"
+        )
     else:
         body = f"# News digest — {today}\n\n_No new items today._"
 

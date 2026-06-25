@@ -119,10 +119,15 @@ The pipeline prints which backend is active at startup
 ### Supabase tables (`schema.sql`)
 
 ```
-┌─ seen_items ──────────────┐   deduplication memory
+┌─ seen_items ──────────────┐   deduplication memory + later lookup
 │  id        text  (PK)     │   one row per article ever processed
 │  seen_at   timestamptz    │
+│  title / url / source     │   stored so you can find an item again
+│  published text           │
+│  note      text           │   YOUR comments/tags — fill it in to search later
 └───────────────────────────┘
+   The digest email also lists each item's id, so you can match a digest
+   point back to its row in this table.
 
 ┌─ digests ─────────────────┐   history
 │  id         bigint (PK)   │   every digest that was sent, archived

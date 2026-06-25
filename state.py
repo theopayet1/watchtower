@@ -64,16 +64,31 @@ def filter_new(items: list[dict]) -> list[dict]:
 
 
 def mark_seen(items: list[dict]) -> None:
-    """Marque les items comme traités. À n'appeler qu'APRÈS livraison réussie."""
+    """Marque les items comme traités EN STOCKANT titre/url/source, pour pouvoir
+    les retrouver plus tard (recherche dans la base). À n'appeler qu'APRÈS
+    livraison réussie. La colonne `note` n'est pas touchée ici : tu la remplis
+    toi-même dans Supabase pour annoter/taguer un item."""
     if not items:
         return
     if USE_SUPABASE:
-        rows = [{"id": it["id"], "seen_at": _now()} for it in items]
+        rows = [{
+            "id": it["id"],
+            "seen_at": _now(),
+            "title": it.get("title"),
+            "url": it.get("url"),
+            "source": it.get("source"),
+            "published": str(it["published"]) if it.get("published") not in (None, "") else None,
+        } for it in items]
         _sb.table("seen_items").upsert(rows).execute()
     else:
         seen = _load_seen()
         for it in items:
-            seen[it["id"]] = _now()
+            seen[it["id"]] = {
+                "seen_at": _now(),
+                "title": it.get("title"),
+                "url": it.get("url"),
+                "source": it.get("source"),
+            }
         _save_seen(seen)
 
 
